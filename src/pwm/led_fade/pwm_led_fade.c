@@ -23,22 +23,28 @@
 #define MAX_LED_BRIGHTNESS 255
 #define MIN_LED_BRIGHTNESS 0
 
-void on_pwm_wrap() {
-// this is the interrupt handler, called each time the PWM counter wraps
+void on_pwm_wrap()
+{
+    // this is the interrupt handler, called each time the PWM counter wraps
     static int fade = 0;
     static bool going_up = true;
     // Clear the interrupt flag that brought us here
     pwm_clear_irq(pwm_gpio_to_slice_num(PICO_DEFAULT_LED_PIN));
 
-    if (going_up) {
-        ++fade;
-        if (fade > MAX_LED_BRIGHTNESS) {
+    if (going_up)
+    {
+        fade += 5;
+        if (fade > MAX_LED_BRIGHTNESS)
+        {
             fade = MAX_LED_BRIGHTNESS;
             going_up = false;
         }
-    } else {
-        --fade;
-        if (fade < MIN_LED_BRIGHTNESS) {
+    }
+    else
+    {
+        fade -= 5;
+        if (fade < MIN_LED_BRIGHTNESS)
+        {
             fade = MIN_LED_BRIGHTNESS;
             going_up = true;
         }
@@ -46,11 +52,11 @@ void on_pwm_wrap() {
     // Square the fade value to make the LED's brightness appear more linear
     // note uint16_t range (0-65535)
     pwm_set_gpio_level(PICO_DEFAULT_LED_PIN, fade * fade);
-    //https://raspberrypi.github.io/pico-sdk-doxygen/group__hardware__pwm.html#ga279d1ba7dcc8f19619f389317efb41fd
+    // https://raspberrypi.github.io/pico-sdk-doxygen/group__hardware__pwm.html#ga279d1ba7dcc8f19619f389317efb41fd
 }
 
-
-int main(void) {
+int main(void)
+{
     // Tell the LED pin that the PWM is in charge of its value.
     gpio_set_function(PICO_DEFAULT_LED_PIN, GPIO_FUNC_PWM);
     // Figure out which slice we just connected to the LED pin
