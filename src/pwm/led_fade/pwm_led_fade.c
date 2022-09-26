@@ -33,6 +33,7 @@ void on_pwm_wrap()
 
     if (going_up)
     {
+        // increased fade rate of increase from 1 to 5 to make the LED fade faster
         fade += 5;
         if (fade > MAX_LED_BRIGHTNESS)
         {
